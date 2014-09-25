@@ -1,4 +1,4 @@
 javakatas
 =========
 
-It contains different java exercises
+It contains different java exercises.
