@@ -22,7 +22,7 @@ public class ConversionQuestionAnswerer {
 			GalacticCurrency galacticCurrency = parser.parseGalacticCurrency(galacticExpression);
 			DecimalFormat format = new DecimalFormat("#.##");
 			return galacticExpression + " is "
-					+ format.format(galacticCurrency.value(conversionTable));
+					+ format.format(galacticCurrency.value(conversionTable))+ " Credits";
 		}
 	}
 

@@ -23,24 +23,23 @@ public class TestGalaxyAgenda {
 		conversionTable = new ConversionTable();
 	}
 
-	/*
-	 * @Test public void testAskGalactiNumberValue() { GalaxyAgenda agenda = new
-	 * GalaxyAgenda(); agenda.addNote("glob is I"); agenda.addNote("pish is X");
-	 * agenda.addNote("tegj is L");
-	 * agenda.addNote("glob glob Silver is 34 Credits");
-	 * assertEquals("pish tegj glob glob is 42",
-	 * agenda.ask("how much is pish tegj glob glob ?")); //
-	 * assertEquals("glob prok Silver is 68", //
-	 * agenda.ask("how many Credits is glob prok Silver ?")); }
-	 */
 	@Test
-	public void testGalacticValue() throws InvalidConversionKey {
-		conversionTable.put("glob", "I");
-		conversionTable.put("prok", "V");
-		conversionTable.put("pish", "X");
-
-		assertEquals(4, g("glob prok").value(conversionTable));
-		assertEquals(14, g("pish glob prok").value(conversionTable));
+	public void testAskGalactiNumberValue() throws InvalidConversionKey {
+		GalaxyAgenda agenda = new GalaxyAgenda();
+		agenda.addNote("glob is I");
+		agenda.addNote("prok is V");
+		agenda.addNote("pish is X");
+		agenda.addNote("tegj is L");
+		agenda.addNote("glob glob Silver is 34 Credits");
+		agenda.addNote("glob prok Gold is 57800 Credits");
+		assertEquals("pish tegj glob glob is 42", agenda.ask("how much is pish tegj glob glob ?"));
+		assertEquals("glob prok Gold is 57800 Credits",
+				agenda.ask("how many Credits is glob prok Gold ?"));
+		assertEquals("glob prok Silver is 68 Credits",
+				agenda.ask("how many Credits is glob prok Silver ?"));
+		assertEquals(
+				"I have no idea what you are talking about",
+				agenda.ask("how much wood could a woodchuck chuck if a woodchuck could chuck wood ?"));
 	}
 
 	@Test
@@ -54,27 +53,14 @@ public class TestGalaxyAgenda {
 	}
 
 	@Test
-	public void testBuildEquation() throws InvalidConversionKey {
+	public void testGalacticValue() throws InvalidConversionKey {
 		conversionTable.put("glob", "I");
-		EquationStringParser equationStringParser = new EquationStringParser();
-		Equation equation = equationStringParser.parse("glob glob Silver is 34 Credits",
-				conversionTable);
-		assertEquals(g("glob glob"), equation.getCoeficient());
-		assertEquals("Silver", equation.getVariable());
-		assertEquals(d("34"), equation.getConstantDecimal());
-	}
+		conversionTable.put("prok", "V");
+		conversionTable.put("pish", "X");
 
-	private BigDecimal d(String decimalString) {
-		return new BigDecimal(decimalString);
+		assertEquals(4, g("glob prok").value(conversionTable));
+		assertEquals(14, g("pish glob prok").value(conversionTable));
 	}
-
-	@Test
-	public void testSolveEquation() throws InvalidConversionKey {
-		conversionTable.put("glob", "I");
-		Equation equation = new Equation(g("glob glob"), "Silver", 34);
-		assertEquals(d("17"), equation.solve(conversionTable));
-	}
-
 	@Test
 	public void testAddGalacticNote() throws InvalidConversionKey {
 		GalaxyAgenda agenda = new GalaxyAgenda(conversionTable);
@@ -95,6 +81,35 @@ public class TestGalaxyAgenda {
 	}
 
 	@Test
+	public void testBuildEquation() throws InvalidConversionKey {
+		conversionTable.put("glob", "I");
+		EquationStringParser equationStringParser = new EquationStringParser();
+		Equation equation = equationStringParser.parse("glob glob Silver is 34 Credits",
+				conversionTable);
+		assertEquals(g("glob glob"), equation.getCoeficient());
+		assertEquals("Silver", equation.getVariable());
+		assertEquals(d("34"), equation.getConstantDecimal());
+	}
+
+	@Test
+	public void testParseGalacticCurrency() {
+		EquationStringParser parser = new EquationStringParser();
+		GalacticCurrency galaticCurrency = parser.parseGalacticCurrency("glob prok Silver");
+		assertEquals(new GalacticCurrency("glob prok", "Silver"), galaticCurrency);
+	}
+	private BigDecimal d(String decimalString) {
+		return new BigDecimal(decimalString);
+	}
+
+	@Test
+	public void testSolveEquation() throws InvalidConversionKey {
+		conversionTable.put("glob", "I");
+		Equation equation = new Equation(g("glob glob"), "Silver", 34);
+		assertEquals(d("17"), equation.solve(conversionTable));
+	}
+
+
+	@Test
 	public void testAskGalactic() throws InvalidConversionKey {
 		conversionTable.put("glob", "I");
 		conversionTable.put("pish", "X");
@@ -112,23 +127,20 @@ public class TestGalaxyAgenda {
 		conversionTable.put("Iron", "195.5");
 		GalaxyAgenda agenda = new GalaxyAgenda(conversionTable);
 
-		assertEquals("glob prok Silver is 68", agenda.ask("how many Credits is glob prok Silver ?"));
-		assertEquals("glob prok Iron is 782", agenda.ask("how many Credits is glob prok Iron ?"));
+		assertEquals("glob prok Silver is 68 Credits",
+				agenda.ask("how many Credits is glob prok Silver ?"));
+		assertEquals("glob prok Iron is 782 Credits",
+				agenda.ask("how many Credits is glob prok Iron ?"));
 	}
 
-	@Test
-	public void testParseGalacticCurrency() {
-		EquationStringParser parser = new EquationStringParser();
-		GalacticCurrency galaticCurrency = parser.parseGalacticCurrency("glob prok Silver");
-		assertEquals(new GalacticCurrency("glob prok", "Silver"), galaticCurrency);
-	}
 
 	@Test
 	public void testInvalidQuestion() throws InvalidConversionKey {
 		GalaxyAgenda galaxyAgenda = new GalaxyAgenda(null);
 		assertEquals(
 				"I have no idea what you are talking about",
-				galaxyAgenda.ask("how much wood could a woodchuck chuck if a woodchuck could chuck wood ?"));
+				galaxyAgenda
+						.ask("how much wood could a woodchuck chuck if a woodchuck could chuck wood ?"));
 	}
 
 	private Galactic g(String string) {
