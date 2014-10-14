@@ -1,0 +1,44 @@
+package src;
+/*It parses string with the form of 'glob glob Silver is 34 Credits'*/
+public class EquationStringParser {
+
+	public Equation parse(String stringEquation, ConversionTable conversionTable)
+			throws InvalidConversionKey {
+		int constant = getConstant(stringEquation);
+		String coeficient = getCoeficient(stringEquation, conversionTable);
+		String variable = getVariable(stringEquation, conversionTable);
+		return new Equation(Galactic.build(coeficient), variable, constant);
+	}
+
+	private String getVariable(String stringEquation, ConversionTable conversionTable)
+			throws InvalidConversionKey {
+		return getLeftPart(stringEquation).replaceFirst(
+				getCoeficient(stringEquation, conversionTable), "").trim();
+	}
+
+	private String getCoeficient(String stringEquation, ConversionTable conversionTable) {
+		String leftPart[] = getLeftPart(stringEquation).split(" ");
+		String currency = leftPart[leftPart.length-1];
+		return getLeftPart(stringEquation).replace(currency, "").trim();
+	}
+
+	private int getConstant(String stringEquation) {
+		return Integer.parseInt(getRightPart(stringEquation).split(" ")[0]);
+	}
+
+	private String getRightPart(String stringEquation) {
+		return stringEquation.split(" is ")[1];
+	}
+
+	private String getLeftPart(String stringEquation) {
+		return stringEquation.split(" is ")[0];
+	}
+
+	public GalacticCurrency parseGalacticCurrency(String galacticCurrency) {
+		String[] galacticCurrencyArray = galacticCurrency.split(" ");
+		String currency = galacticCurrencyArray[galacticCurrencyArray.length - 1];
+		String galactic = galacticCurrency.replace(currency, "").trim();
+		return new GalacticCurrency(galactic, currency);
+	}
+
+}
