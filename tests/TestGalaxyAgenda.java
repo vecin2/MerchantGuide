@@ -13,7 +13,9 @@ import src.EquationStringParser;
 import src.Galactic;
 import src.GalacticCurrency;
 import src.GalaxyAgenda;
+import src.GalaxyAgendaApp;
 import src.InvalidConversionKey;
+import static org.mockito.Mockito.*;
 
 public class TestGalaxyAgenda {
 	ConversionTable conversionTable;
@@ -61,6 +63,7 @@ public class TestGalaxyAgenda {
 		assertEquals(4, g("glob prok").value(conversionTable));
 		assertEquals(14, g("pish glob prok").value(conversionTable));
 	}
+
 	@Test
 	public void testAddGalacticNote() throws InvalidConversionKey {
 		GalaxyAgenda agenda = new GalaxyAgenda(conversionTable);
@@ -97,6 +100,7 @@ public class TestGalaxyAgenda {
 		GalacticCurrency galaticCurrency = parser.parseGalacticCurrency("glob prok Silver");
 		assertEquals(new GalacticCurrency("glob prok", "Silver"), galaticCurrency);
 	}
+
 	private BigDecimal d(String decimalString) {
 		return new BigDecimal(decimalString);
 	}
@@ -107,7 +111,6 @@ public class TestGalaxyAgenda {
 		Equation equation = new Equation(g("glob glob"), "Silver", 34);
 		assertEquals(d("17"), equation.solve(conversionTable));
 	}
-
 
 	@Test
 	public void testAskGalactic() throws InvalidConversionKey {
@@ -133,7 +136,6 @@ public class TestGalaxyAgenda {
 				agenda.ask("how many Credits is glob prok Iron ?"));
 	}
 
-
 	@Test
 	public void testInvalidQuestion() throws InvalidConversionKey {
 		GalaxyAgenda galaxyAgenda = new GalaxyAgenda(null);
@@ -141,6 +143,22 @@ public class TestGalaxyAgenda {
 				"I have no idea what you are talking about",
 				galaxyAgenda
 						.ask("how much wood could a woodchuck chuck if a woodchuck could chuck wood ?"));
+	}
+
+	@Test
+	public void testRunCallsAddNoteOnGalaxyListener() throws InvalidConversionKey {
+		GalaxyAgenda fakeAgenda = mock(GalaxyAgenda.class);
+		GalaxyAgendaApp galaxyAgenda = new GalaxyAgendaApp(fakeAgenda);
+		galaxyAgenda.run("glob is V");
+		verify(fakeAgenda).addNote("glob is V");
+	}
+
+	@Test
+	public void testRunCallsAskOnGalaxyListener() throws InvalidConversionKey {
+		GalaxyAgenda fakeAgenda = mock(GalaxyAgenda.class);
+		GalaxyAgendaApp galaxyAgenda = new GalaxyAgendaApp(fakeAgenda, System.out);
+		galaxyAgenda.run("how much is glob ?");
+		verify(fakeAgenda).ask("how much is glob ?");
 	}
 
 	private Galactic g(String string) {
