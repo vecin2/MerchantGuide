@@ -1,17 +1,16 @@
 package src;
 
 import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.io.StringBufferInputStream;
+import java.util.ArrayList;
 
 public class GalaxyAgendaApp {
 	GalaxyAgenda galaxyAgenda;
 	PrintStream printStream;
 	String fileInputPath;
+	private InstructionReader instructionReader;
 
 	public GalaxyAgendaApp(GalaxyAgenda galaxyAgenda, String fileInputPath) {
 		this.galaxyAgenda = galaxyAgenda;
@@ -25,6 +24,11 @@ public class GalaxyAgendaApp {
 
 	public GalaxyAgendaApp(GalaxyAgenda galaxyAgenda) {
 		this.galaxyAgenda = galaxyAgenda;
+	}
+
+	public GalaxyAgendaApp(GalaxyAgenda galaxyAgenda, InstructionReader instructionReader) {
+		this.galaxyAgenda = galaxyAgenda;
+		this.instructionReader = instructionReader;
 	}
 
 	public void run(String instruction) {
@@ -41,14 +45,20 @@ public class GalaxyAgendaApp {
 	}
 
 	public void run() throws IOException {
-		FileReader fileReader = new FileReader(fileInputPath);
-		BufferedReader br = new BufferedReader(fileReader);
-		String instruction = br.readLine();
-		while (instruction != null) {
-			run(instruction);
-			instruction = br.readLine();
-		}
-		
+		runInstructions();
+
 	}
 
+	public static void main(String[] args) throws IOException, InvalidArgsException {
+		InstructionReader instructionReader = InstructionReader.buildFromArgs(args);
+		GalaxyAgendaApp app = new GalaxyAgendaApp(new GalaxyAgenda(), instructionReader);
+		app.runInstructions();
+	}
+
+	private void runInstructions() throws IOException {
+		ArrayList<String> instructionList = instructionReader.readInstructions();
+		for (String instruction : instructionList) {
+			run(instruction);
+		}
+	}
 }

@@ -25,6 +25,7 @@ I learn
 Implement the simple next step that takes to the solution
 Keep growing until you get to the solution. 
 Checks which tests are duplicated and can be removed
+InputStreamReader differencies with FileReader
 
 -------Notes-------------
 Test plan has the following tests:
