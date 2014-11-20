@@ -2,6 +2,7 @@ package tests;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.PrintStream;
 import java.math.BigDecimal;
 
 import org.junit.Before;
@@ -44,6 +45,7 @@ public class TestGalaxyAgenda {
 				agenda.ask("how much wood could a woodchuck chuck if a woodchuck could chuck wood ?"));
 	}
 
+//From here tests are finer grain and could be deleted if they fail
 	@Test
 	public void testGalacticToRoman() throws InvalidConversionKey {
 		conversionTable.put("glob", "I");
@@ -82,7 +84,7 @@ public class TestGalaxyAgenda {
 		assertEquals("9", conversionTable.get("Silver"));
 		assertEquals("195.5", conversionTable.get("Iron"));
 	}
-
+		
 	@Test
 	public void testBuildEquation() throws InvalidConversionKey {
 		conversionTable.put("glob", "I");
@@ -101,17 +103,14 @@ public class TestGalaxyAgenda {
 		assertEquals(new GalacticCurrency("glob prok", "Silver"), galaticCurrency);
 	}
 
-	private BigDecimal d(String decimalString) {
-		return new BigDecimal(decimalString);
-	}
-
+	
 	@Test
 	public void testSolveEquation() throws InvalidConversionKey {
 		conversionTable.put("glob", "I");
 		Equation equation = new Equation(g("glob glob"), "Silver", 34);
 		assertEquals(d("17"), equation.solve(conversionTable));
 	}
-
+	
 	@Test
 	public void testAskGalactic() throws InvalidConversionKey {
 		conversionTable.put("glob", "I");
@@ -135,7 +134,7 @@ public class TestGalaxyAgenda {
 		assertEquals("glob prok Iron is 782 Credits",
 				agenda.ask("how many Credits is glob prok Iron ?"));
 	}
-
+	
 	@Test
 	public void testInvalidQuestion() throws InvalidConversionKey {
 		GalaxyAgenda galaxyAgenda = new GalaxyAgenda(null);
@@ -144,24 +143,31 @@ public class TestGalaxyAgenda {
 				galaxyAgenda
 						.ask("how much wood could a woodchuck chuck if a woodchuck could chuck wood ?"));
 	}
-
+	
 	@Test
 	public void testRunCallsAddNoteOnGalaxyListener() throws InvalidConversionKey {
 		GalaxyAgenda fakeAgenda = mock(GalaxyAgenda.class);
-		GalaxyAgendaApp galaxyAgenda = new GalaxyAgendaApp(fakeAgenda);
-		galaxyAgenda.run("glob is V");
+		GalaxyAgendaApp galaxyAgendaApp = new GalaxyAgendaApp(fakeAgenda);
+		galaxyAgendaApp.run("glob is V");
 		verify(fakeAgenda).addNote("glob is V");
 	}
 
 	@Test
 	public void testRunCallsAskOnGalaxyListener() throws InvalidConversionKey {
 		GalaxyAgenda fakeAgenda = mock(GalaxyAgenda.class);
-		GalaxyAgendaApp galaxyAgenda = new GalaxyAgendaApp(fakeAgenda, System.out);
+		PrintStream fakePrintStream = mock (PrintStream.class);
+		when(fakeAgenda.ask("how much is glob ?")).thenReturn("doesntMatter");
+		
+		GalaxyAgendaApp galaxyAgenda = new GalaxyAgendaApp(fakeAgenda,fakePrintStream);
 		galaxyAgenda.run("how much is glob ?");
 		verify(fakeAgenda).ask("how much is glob ?");
+		verify(fakePrintStream).println("doesntMatter");
 	}
-
+	private BigDecimal d(String decimalString) {
+		return new BigDecimal(decimalString);
+	}
 	private Galactic g(String string) {
 		return Galactic.build(string);
 	}
+	
 }

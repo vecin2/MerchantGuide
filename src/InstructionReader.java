@@ -30,7 +30,7 @@ public class InstructionReader {
 			}
 		} finally {
 			if (getBufferReader() != null)
-				;//getBufferReader().close();
+				getBufferReader().close();
 		}
 
 		return instructions;
@@ -58,7 +58,7 @@ public class InstructionReader {
 	public String readInstruction() throws FileNotFoundException, IOException {
 		return getBufferReader().readLine();
 	}
-
+	
 	private BufferedReader getBufferReader() throws FileNotFoundException {
 		if (br == null) {
 			br = new BufferedReader(getInputReader());

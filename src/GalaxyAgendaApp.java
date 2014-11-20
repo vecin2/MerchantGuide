@@ -1,7 +1,5 @@
 package src;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
@@ -26,7 +24,8 @@ public class GalaxyAgendaApp {
 		this.galaxyAgenda = galaxyAgenda;
 	}
 
-	public GalaxyAgendaApp(GalaxyAgenda galaxyAgenda, InstructionReader instructionReader) {
+	public GalaxyAgendaApp(GalaxyAgenda galaxyAgenda,
+			InstructionReader instructionReader) {
 		this.galaxyAgenda = galaxyAgenda;
 		this.instructionReader = instructionReader;
 	}
@@ -36,12 +35,20 @@ public class GalaxyAgendaApp {
 			if (!instruction.contains("?")) {
 				galaxyAgenda.addNote(instruction);
 			} else {
-				System.out.println(galaxyAgenda.ask(instruction));
+				printOutput(galaxyAgenda.ask(instruction));
 			}
 
 		} catch (InvalidConversionKey e) {
-			System.out.println("I have no idea what you are talking about: " + e.getMessage());
+			printOutput("I have no idea what you are talking about: "
+					+ e.getMessage());
 		}
+	}
+
+	private void printOutput(String toPrint)  {
+		if (printStream != null)
+			printStream.println(toPrint);
+		else
+			System.out.println(toPrint);
 	}
 
 	public void run() throws IOException {
@@ -49,16 +56,43 @@ public class GalaxyAgendaApp {
 
 	}
 
-	public static void main(String[] args) throws IOException, InvalidArgsException {
-		InstructionReader instructionReader = InstructionReader.buildFromArgs(args);
-		GalaxyAgendaApp app = new GalaxyAgendaApp(new GalaxyAgenda(), instructionReader);
+	public void startAgenda() throws IOException {
+		// for each instruction read
+	}
+
+	public static void main(String[] args) throws IOException,
+			InvalidArgsException {
+		InstructionReader instructionReader = InstructionReader
+				.buildFromArgs(args);
+		GalaxyAgendaApp app = new GalaxyAgendaApp(new GalaxyAgenda(),
+				instructionReader);
+		if(instructionReader.isFileType()){
 		app.runInstructions();
+		}
+		else{
+			String instruction =instructionReader.readInstruction();
+			while(instruction!=null && !instruction.isEmpty()){
+				app.run(instruction);
+				instruction = instructionReader.readInstruction();
+			}
+		}
 	}
 
 	private void runInstructions() throws IOException {
-		ArrayList<String> instructionList = instructionReader.readInstructions();
+		ArrayList<String> instructionList = instructionReader
+				.readInstructions();
 		for (String instruction : instructionList) {
 			run(instruction);
 		}
 	}
+
+	public static void simpleMain(String[] args) throws InvalidArgsException,
+			IOException {
+		InstructionReader instructionReader = InstructionReader
+				.buildFromArgs(args);
+		GalaxyAgendaApp app = new GalaxyAgendaApp(new GalaxyAgenda(),
+				instructionReader);
+		app.runInstructions();
+	}
+
 }

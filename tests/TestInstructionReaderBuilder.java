@@ -15,26 +15,31 @@ public class TestInstructionReaderBuilder {
 	public ExpectedException thrown = ExpectedException.none();
 
 	@Test
-	public void testInstructionReaderBuildFileTypeFromArgs() throws InvalidArgsException, FileNotFoundException {
-		instructionReader = InstructionReader.buildFromArgs(new String[] { "file", "galaxyTests.txt" });
+	public void testInstructionReaderBuildFileTypeFromArgs()
+			throws InvalidArgsException, FileNotFoundException {
+		instructionReader = InstructionReader.buildFromArgs(new String[] {
+				"file", "galaxyTests.txt" });
 		assert (instructionReader.isFileType());
 	}
 
 	@Test
-	public void testInstructionReaderBuildStandardTypeFromArgs() throws InvalidArgsException, FileNotFoundException {
-		instructionReader = InstructionReader.buildFromArgs(new String[] { "standard" });
+	public void testInstructionReaderBuildStandardTypeFromArgs()
+			throws InvalidArgsException, FileNotFoundException {
+		instructionReader = InstructionReader
+				.buildFromArgs(new String[] { "standard" });
 		assert (instructionReader.isStandardType());
 	}
 
 	@Test
-	public void testCreatesAnStandardTypeWhenNoArgsArePassed() throws InvalidArgsException, FileNotFoundException {
+	public void testCreatesAnStandardTypeWhenNoArgsArePassed()
+			throws InvalidArgsException, FileNotFoundException {
 		instructionReader = InstructionReader.buildFromArgs(new String[] {});
 		assert (instructionReader.isStandardType());
 	}
 
 	@Test
-	public void testThrowsExceptionIfInputMethodTypeIsNotCorrect() throws InvalidArgsException, FileNotFoundException {
-		
+	public void testThrowsExceptionIfInputMethodTypeIsNotCorrect()
+			throws InvalidArgsException, FileNotFoundException {
 		thrown.expect(InvalidArgsException.class);
 		thrown.expectMessage("pepe is not a valid input method");
 		InstructionReader instructionReader = InstructionReader
