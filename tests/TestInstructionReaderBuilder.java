@@ -29,7 +29,7 @@ public class TestInstructionReaderBuilder {
 				.buildFromArgs(new String[] { "standard" });
 		assert (instructionReader.isStandardType());
 	}
-
+	//this test is redundant, same test in testInstructionReader
 	@Test
 	public void testCreatesAnStandardTypeWhenNoArgsArePassed()
 			throws InvalidArgsException, FileNotFoundException {

@@ -2,21 +2,19 @@ package src;
 /*It parses string with the form of 'glob glob Silver is 34 Credits'*/
 public class EquationStringParser {
 
-	public Equation parse(String stringEquation, ConversionTable conversionTable)
-			throws InvalidConversionKey {
+	public Instruction parse(String stringEquation){
 		int constant = getConstant(stringEquation);
-		String coeficient = getCoeficient(stringEquation, conversionTable);
-		String variable = getVariable(stringEquation, conversionTable);
+		String coeficient = getCoeficient(stringEquation);
+		String variable = getVariable(stringEquation);
 		return new Equation(Galactic.build(coeficient), variable, constant);
 	}
 
-	private String getVariable(String stringEquation, ConversionTable conversionTable)
-			throws InvalidConversionKey {
+	private String getVariable(String stringEquation){
 		return getLeftPart(stringEquation).replaceFirst(
-				getCoeficient(stringEquation, conversionTable), "").trim();
+				getCoeficient(stringEquation), "").trim();
 	}
 
-	private String getCoeficient(String stringEquation, ConversionTable conversionTable) {
+	private String getCoeficient(String stringEquation) {
 		String leftPart[] = getLeftPart(stringEquation).split(" ");
 		String currency = leftPart[leftPart.length-1];
 		return getLeftPart(stringEquation).replace(currency, "").trim();

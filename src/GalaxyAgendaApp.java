@@ -33,9 +33,9 @@ public class GalaxyAgendaApp {
 	public void run(String instruction) {
 		try {
 			if (!instruction.contains("?")) {
-				galaxyAgenda.addNote(instruction);
+				AgendaParser.parseInstruction(instruction).run(galaxyAgenda.conversionTable);
 			} else {
-				printOutput(galaxyAgenda.ask(instruction));
+				printOutput(answer(instruction));
 			}
 
 		} catch (InvalidConversionKey e) {
@@ -43,7 +43,17 @@ public class GalaxyAgendaApp {
 					+ e.getMessage());
 		}
 	}
-
+	public String answer(String question) throws InvalidConversionKey {
+		if (question.split(" is ").length < 2) {
+			return "I have no idea what you are talking about";
+		} else if (!question.contains("Credits")) {
+			Galactic g =(Galactic)AgendaParser.parseInstruction(question);
+			return g.getSolvedString(galaxyAgenda.conversionTable);
+		} else {
+			GalacticCurrency galacticCurrency =(GalacticCurrency)AgendaParser.parseInstruction(question);
+			return galacticCurrency.getSolvedString(galaxyAgenda.conversionTable);
+		}
+	}
 	private void printOutput(String toPrint)  {
 		if (printStream != null)
 			printStream.println(toPrint);
@@ -56,9 +66,6 @@ public class GalaxyAgendaApp {
 
 	}
 
-	public void startAgenda() throws IOException {
-		// for each instruction read
-	}
 
 	public static void main(String[] args) throws IOException,
 			InvalidArgsException {
@@ -86,13 +93,6 @@ public class GalaxyAgendaApp {
 		}
 	}
 
-	public static void simpleMain(String[] args) throws InvalidArgsException,
-			IOException {
-		InstructionReader instructionReader = InstructionReader
-				.buildFromArgs(args);
-		GalaxyAgendaApp app = new GalaxyAgendaApp(new GalaxyAgenda(),
-				instructionReader);
-		app.runInstructions();
-	}
+
 
 }

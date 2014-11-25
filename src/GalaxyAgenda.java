@@ -1,7 +1,5 @@
 package src;
 
-
-
 public class GalaxyAgenda {
 	ConversionTable conversionTable;
 
@@ -14,11 +12,9 @@ public class GalaxyAgenda {
 	}
 
 	public void addNote(String note) throws InvalidConversionKey {
-			ConversationNotePersister persister = new ConversationNotePersister(conversionTable);
-			persister.saveNote(note);
+			AgendaParser.parseInstruction(note).run(conversionTable);
 	}
-	public String ask(String question) throws InvalidConversionKey {
-			ConversionQuestionAnswerer answerer = new ConversionQuestionAnswerer(conversionTable);
-			return answerer.answer(question);
-	}
+
+	
+
 }

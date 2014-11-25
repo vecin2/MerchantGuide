@@ -1,7 +1,7 @@
 package src;
 
 
-public class Galactic {
+public class Galactic implements Instruction {
 	String stringGalactic;
 	String[] galacticDigits;
 	ConversionTable conversationTable;
@@ -43,6 +43,15 @@ public class Galactic {
 
 	public int value(ConversionTable conversionTable) throws InvalidConversionKey {
 		return Roman.build(toRoman(conversionTable)).value();
+	}
+
+	@Override
+	public void run(ConversionTable conversionTable) {
+//		
+	}
+
+	public String getSolvedString(ConversionTable conversionTable) throws InvalidConversionKey {
+		return getStringValue() + " is " + value(conversionTable);
 	}
 
 }

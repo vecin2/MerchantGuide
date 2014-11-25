@@ -2,7 +2,7 @@ package src;
 
 import java.math.BigDecimal;
 
-public class Equation {
+public class Equation implements Instruction {
 	Galactic coeficient;
 	int constant;
 	String variable;
@@ -31,9 +31,18 @@ public class Equation {
 		return decimalConstant;
 	}
 
-	public BigDecimal solve(ConversionTable conversionTable) throws InvalidConversionKey {
-		return  decimalConstant.divide(new BigDecimal(coeficient.value(conversionTable)));
+	public BigDecimal solve(ConversionTable conversionTable)
+			throws InvalidConversionKey {
+		return decimalConstant.divide(new BigDecimal(coeficient
+				.value(conversionTable)));
 	}
 
+	public void run(ConversionTable conversionTable) {
+		try {
+			conversionTable.put(getVariable(), solve(conversionTable).toString());
+		} catch (InvalidConversionKey e) {
+			e.printStackTrace();
+		}
+	}
 
 }

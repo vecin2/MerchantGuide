@@ -87,10 +87,8 @@ public class TestGalaxyAgenda {
 		
 	@Test
 	public void testBuildEquation() throws InvalidConversionKey {
-		conversionTable.put("glob", "I");
 		EquationStringParser equationStringParser = new EquationStringParser();
-		Equation equation = equationStringParser.parse("glob glob Silver is 34 Credits",
-				conversionTable);
+		Equation equation = (Equation)equationStringParser.parse("glob glob Silver is 34 Credits");
 		assertEquals(g("glob glob"), equation.getCoeficient());
 		assertEquals("Silver", equation.getVariable());
 		assertEquals(d("34"), equation.getConstantDecimal());
@@ -144,25 +142,7 @@ public class TestGalaxyAgenda {
 						.ask("how much wood could a woodchuck chuck if a woodchuck could chuck wood ?"));
 	}
 	
-	@Test
-	public void testRunCallsAddNoteOnGalaxyListener() throws InvalidConversionKey {
-		GalaxyAgenda fakeAgenda = mock(GalaxyAgenda.class);
-		GalaxyAgendaApp galaxyAgendaApp = new GalaxyAgendaApp(fakeAgenda);
-		galaxyAgendaApp.run("glob is V");
-		verify(fakeAgenda).addNote("glob is V");
-	}
 
-	@Test
-	public void testRunCallsAskOnGalaxyListener() throws InvalidConversionKey {
-		GalaxyAgenda fakeAgenda = mock(GalaxyAgenda.class);
-		PrintStream fakePrintStream = mock (PrintStream.class);
-		when(fakeAgenda.ask("how much is glob ?")).thenReturn("doesntMatter");
-		
-		GalaxyAgendaApp galaxyAgenda = new GalaxyAgendaApp(fakeAgenda,fakePrintStream);
-		galaxyAgenda.run("how much is glob ?");
-		verify(fakeAgenda).ask("how much is glob ?");
-		verify(fakePrintStream).println("doesntMatter");
-	}
 	private BigDecimal d(String decimalString) {
 		return new BigDecimal(decimalString);
 	}
