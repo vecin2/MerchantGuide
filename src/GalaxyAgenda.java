@@ -1,5 +1,6 @@
 package src;
 
+
 public class GalaxyAgenda {
 	ConversionTable conversionTable;
 
@@ -11,10 +12,13 @@ public class GalaxyAgenda {
 		this.conversionTable = conversationTable;
 	}
 
-	public void addNote(String note) throws InvalidConversionKey {
-			AgendaParser.parseInstruction(note).run(conversionTable);
+	public String run(String note) {
+		return AgendaParser.parseInstruction(note).run(conversionTable);
 	}
 
 	
+
+	
+
 
 }

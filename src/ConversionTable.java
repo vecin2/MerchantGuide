@@ -5,8 +5,8 @@ import java.util.HashMap;
 public class ConversionTable {
 	HashMap<String, String> conversionValues = new HashMap<String, String>();
 
-	public void put(String key, String value) {
-		conversionValues.put(key, value);
+	public String put(String key, String value) {
+		return conversionValues.put(key, value);
 	}
 
 	public String get(String key) throws InvalidConversionKey {

@@ -31,30 +31,13 @@ public class GalaxyAgendaApp {
 	}
 
 	public void run(String instruction) {
-		try {
-			if (!instruction.contains("?")) {
-				AgendaParser.parseInstruction(instruction).run(galaxyAgenda.conversionTable);
-			} else {
-				printOutput(answer(instruction));
-			}
+		String toPrint = galaxyAgenda.run(instruction);
+		if (toPrint != null) {
+			printOutput(galaxyAgenda.run(instruction));
+		}
+	}
 
-		} catch (InvalidConversionKey e) {
-			printOutput("I have no idea what you are talking about: "
-					+ e.getMessage());
-		}
-	}
-	public String answer(String question) throws InvalidConversionKey {
-		if (question.split(" is ").length < 2) {
-			return "I have no idea what you are talking about";
-		} else if (!question.contains("Credits")) {
-			Galactic g =(Galactic)AgendaParser.parseInstruction(question);
-			return g.getSolvedString(galaxyAgenda.conversionTable);
-		} else {
-			GalacticCurrency galacticCurrency =(GalacticCurrency)AgendaParser.parseInstruction(question);
-			return galacticCurrency.getSolvedString(galaxyAgenda.conversionTable);
-		}
-	}
-	private void printOutput(String toPrint)  {
+	private void printOutput(String toPrint) {
 		if (printStream != null)
 			printStream.println(toPrint);
 		else
@@ -66,19 +49,17 @@ public class GalaxyAgendaApp {
 
 	}
 
-
 	public static void main(String[] args) throws IOException,
 			InvalidArgsException {
 		InstructionReader instructionReader = InstructionReader
 				.buildFromArgs(args);
 		GalaxyAgendaApp app = new GalaxyAgendaApp(new GalaxyAgenda(),
 				instructionReader);
-		if(instructionReader.isFileType()){
-		app.runInstructions();
-		}
-		else{
-			String instruction =instructionReader.readInstruction();
-			while(instruction!=null && !instruction.isEmpty()){
+		if (instructionReader.isFileType()) {
+			app.runInstructions();
+		} else {
+			String instruction = instructionReader.readInstruction();
+			while (instruction != null && !instruction.isEmpty()) {
 				app.run(instruction);
 				instruction = instructionReader.readInstruction();
 			}
@@ -92,7 +73,5 @@ public class GalaxyAgendaApp {
 			run(instruction);
 		}
 	}
-
-
 
 }

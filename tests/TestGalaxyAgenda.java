@@ -16,6 +16,8 @@ import src.GalacticCurrency;
 import src.GalaxyAgenda;
 import src.GalaxyAgendaApp;
 import src.InvalidConversionKey;
+import src.QuestionParser;
+import src.expressions.Expression;
 import static org.mockito.Mockito.*;
 
 public class TestGalaxyAgenda {
@@ -29,20 +31,20 @@ public class TestGalaxyAgenda {
 	@Test
 	public void testAskGalactiNumberValue() throws InvalidConversionKey {
 		GalaxyAgenda agenda = new GalaxyAgenda();
-		agenda.addNote("glob is I");
-		agenda.addNote("prok is V");
-		agenda.addNote("pish is X");
-		agenda.addNote("tegj is L");
-		agenda.addNote("glob glob Silver is 34 Credits");
-		agenda.addNote("glob prok Gold is 57800 Credits");
-		assertEquals("pish tegj glob glob is 42", agenda.ask("how much is pish tegj glob glob ?"));
+		agenda.run("glob is I");
+		agenda.run("prok is V");
+		agenda.run("pish is X");
+		agenda.run("tegj is L");
+		agenda.run("glob glob Silver is 34 Credits");
+		agenda.run("glob prok Gold is 57800 Credits");
+		assertEquals("pish tegj glob glob is 42", agenda.run("how much is pish tegj glob glob ?"));
 		assertEquals("glob prok Gold is 57800 Credits",
-				agenda.ask("how many Credits is glob prok Gold ?"));
+				agenda.run("how many Credits is glob prok Gold ?"));
 		assertEquals("glob prok Silver is 68 Credits",
-				agenda.ask("how many Credits is glob prok Silver ?"));
+				agenda.run("how many Credits is glob prok Silver ?"));
 		assertEquals(
 				"I have no idea what you are talking about",
-				agenda.ask("how much wood could a woodchuck chuck if a woodchuck could chuck wood ?"));
+				agenda.run("how much wood could a woodchuck chuck if a woodchuck could chuck wood ?"));
 	}
 
 //From here tests are finer grain and could be deleted if they fail
@@ -69,7 +71,7 @@ public class TestGalaxyAgenda {
 	@Test
 	public void testAddGalacticNote() throws InvalidConversionKey {
 		GalaxyAgenda agenda = new GalaxyAgenda(conversionTable);
-		agenda.addNote("glob is I");
+		agenda.run("glob is I");
 		assertEquals("I", conversionTable.get("glob"));
 	}
 
@@ -79,8 +81,8 @@ public class TestGalaxyAgenda {
 		conversionTable.put("prok", "V");
 		conversionTable.put("pish", "X");
 		GalaxyAgenda agenda = new GalaxyAgenda(conversionTable);
-		agenda.addNote("glob prok Silver is 36 Credits");
-		agenda.addNote("pish pish Iron is 3910 Credits");
+		agenda.run("glob prok Silver is 36 Credits");
+		agenda.run("pish pish Iron is 3910 Credits");
 		assertEquals("9", conversionTable.get("Silver"));
 		assertEquals("195.5", conversionTable.get("Iron"));
 	}
@@ -96,8 +98,7 @@ public class TestGalaxyAgenda {
 
 	@Test
 	public void testParseGalacticCurrency() {
-		EquationStringParser parser = new EquationStringParser();
-		GalacticCurrency galaticCurrency = parser.parseGalacticCurrency("glob prok Silver");
+		Expression galaticCurrency = GalacticCurrency.parse("how many Credits is glob prok Silver ?");
 		assertEquals(new GalacticCurrency("glob prok", "Silver"), galaticCurrency);
 	}
 
@@ -116,7 +117,7 @@ public class TestGalaxyAgenda {
 		conversionTable.put("tegj", "L");
 		GalaxyAgenda agenda = new GalaxyAgenda(conversionTable);
 
-		assertEquals("pish tegj glob is 41", agenda.ask("how much is pish tegj glob ?"));
+		assertEquals("pish tegj glob is 41", agenda.run("how much is pish tegj glob ?"));
 	}
 
 	@Test
@@ -128,9 +129,9 @@ public class TestGalaxyAgenda {
 		GalaxyAgenda agenda = new GalaxyAgenda(conversionTable);
 
 		assertEquals("glob prok Silver is 68 Credits",
-				agenda.ask("how many Credits is glob prok Silver ?"));
+				agenda.run("how many Credits is glob prok Silver ?"));
 		assertEquals("glob prok Iron is 782 Credits",
-				agenda.ask("how many Credits is glob prok Iron ?"));
+				agenda.run("how many Credits is glob prok Iron ?"));
 	}
 	
 	@Test
@@ -139,7 +140,7 @@ public class TestGalaxyAgenda {
 		assertEquals(
 				"I have no idea what you are talking about",
 				galaxyAgenda
-						.ask("how much wood could a woodchuck chuck if a woodchuck could chuck wood ?"));
+						.run("how much wood could a woodchuck chuck if a woodchuck could chuck wood ?"));
 	}
 	
 

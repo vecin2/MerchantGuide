@@ -1,4 +1,6 @@
 package src;
+
+
 /*It parses string with the form of 'glob glob Silver is 34 Credits'*/
 public class EquationStringParser {
 
@@ -32,11 +34,7 @@ public class EquationStringParser {
 		return stringEquation.split(" is ")[0];
 	}
 
-	public GalacticCurrency parseGalacticCurrency(String galacticCurrency) {
-		String[] galacticCurrencyArray = galacticCurrency.split(" ");
-		String currency = galacticCurrencyArray[galacticCurrencyArray.length - 1];
-		String galactic = galacticCurrency.replace(currency, "").trim();
-		return new GalacticCurrency(galactic, currency);
-	}
+
+
 
 }

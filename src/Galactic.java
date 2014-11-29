@@ -1,6 +1,5 @@
 package src;
 
-
 public class Galactic implements Instruction {
 	String stringGalactic;
 	String[] galacticDigits;
@@ -12,10 +11,16 @@ public class Galactic implements Instruction {
 	}
 
 	public static Galactic build(String stringGalactic) {
-		return new Galactic(stringGalactic);
+		return new Galactic( stringGalactic);
 	}
-
-	public String toRoman(ConversionTable conversionTable) throws InvalidConversionKey {
+	public static Galactic parse(String instruction){
+		return new Galactic(getAskedVariable(instruction));
+	}
+	private static String getAskedVariable(String question) {
+		return question.split(" is ")[1].substring(0, question.split(" is ")[1].length() - 2);
+	}
+	public String toRoman(ConversionTable conversionTable)
+			throws InvalidConversionKey {
 		String StringString = "";
 		for (String digit : galacticDigits) {
 			StringString += " " + conversionTable.get(digit);
@@ -41,17 +46,20 @@ public class Galactic implements Instruction {
 		return stringGalactic.equals(toCompare.stringGalactic);
 	}
 
-	public int value(ConversionTable conversionTable) throws InvalidConversionKey {
+	public int value(ConversionTable conversionTable)
+			throws InvalidConversionKey {
 		return Roman.build(toRoman(conversionTable)).value();
 	}
 
 	@Override
-	public void run(ConversionTable conversionTable) {
-//		
+	public String run(ConversionTable conversionTable) {
+		try {
+			return getStringValue() + " is " + value(conversionTable);
+		} catch (InvalidConversionKey e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
-	public String getSolvedString(ConversionTable conversionTable) throws InvalidConversionKey {
-		return getStringValue() + " is " + value(conversionTable);
-	}
 
 }

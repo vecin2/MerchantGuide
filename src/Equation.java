@@ -37,12 +37,13 @@ public class Equation implements Instruction {
 				.value(conversionTable)));
 	}
 
-	public void run(ConversionTable conversionTable) {
+	public String run(ConversionTable conversionTable) {
 		try {
-			conversionTable.put(getVariable(), solve(conversionTable).toString());
+			return conversionTable.put(getVariable(), solve(conversionTable).toString());
 		} catch (InvalidConversionKey e) {
 			e.printStackTrace();
 		}
+		return null;
 	}
 
 }
