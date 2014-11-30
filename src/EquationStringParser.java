@@ -1,5 +1,8 @@
 package src;
 
+import src.expressions.Galactic;
+import src.instructions.Instruction;
+
 
 /*It parses string with the form of 'glob glob Silver is 34 Credits'*/
 public class EquationStringParser {

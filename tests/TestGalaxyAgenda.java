@@ -10,11 +10,13 @@ import org.junit.Test;
 import src.ConversionTable;
 import src.Equation;
 import src.EquationStringParser;
-import src.Galactic;
-import src.GalacticCurrency;
 import src.GalaxyAgenda;
 import src.InvalidConversionKey;
 import src.expressions.Expression;
+import src.expressions.Galactic;
+import src.expressions.GalacticCurrency;
+import src.instructions.ExpressionQuestion;
+import src.instructions.Instruction;
 
 public class TestGalaxyAgenda {
 	ConversionTable conversionTable;
@@ -60,8 +62,8 @@ public class TestGalaxyAgenda {
 		conversionTable.put("prok", "V");
 		conversionTable.put("pish", "X");
 
-		assertEquals(4, g("glob prok").value(conversionTable));
-		assertEquals(14, g("pish glob prok").value(conversionTable));
+		assertEquals(new BigDecimal(4), g("glob prok").value(conversionTable));
+		assertEquals(new BigDecimal(14), g("pish glob prok").value(conversionTable));
 	}
 
 	@Test
@@ -94,8 +96,8 @@ public class TestGalaxyAgenda {
 
 	@Test
 	public void testParseGalacticCurrency() {
-		Expression galaticCurrency = GalacticCurrency.parse("how many Credits is glob prok Silver ?");
-		assertEquals(new GalacticCurrency("glob prok", "Silver"), galaticCurrency);
+		ExpressionQuestion question = ExpressionQuestion.parse("how many Credits is glob prok Silver ?");
+		assertEquals(new GalacticCurrency("glob prok", "Silver"), question.getExpression());
 	}
 
 	

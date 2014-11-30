@@ -1,19 +1,24 @@
 package src;
 
-import src.GalacticAddition;
-import src.expressions.Expression;
+import src.expressions.Galactic;
+import src.expressions.GalacticAddition;
+import src.expressions.GalacticCurrency;
+import src.instructions.ExpressionQuestion;
 
 public class QuestionParser {
-	
+
 	public QuestionParser() {
 		super();
 	}
 
-	public  Expression parse(String instruction) {
-		if(!getExpression(instruction).contains("plus")){
-			return parseGalacticCurrency(getExpression(instruction));
-		}
-		else{
+	public ExpressionQuestion parse(String instruction) {
+		if (!instruction.contains("Credits")) {
+			return new ExpressionQuestion(new Galactic(
+					getExpression(instruction)));
+		} else if (!getExpression(instruction).contains("plus")) {
+			return new ExpressionQuestion(
+					parseGalacticCurrency(getExpression(instruction)));
+		} else {
 			return parseAddition(getExpression(instruction));
 		}
 	}
@@ -24,17 +29,18 @@ public class QuestionParser {
 		String galactic = expression.replace(currency, "").trim();
 		return new GalacticCurrency(galactic, currency);
 	}
+
 	protected static String getExpression(String instruction) {
-		String stringGalacticCurrency =  instruction.split(" is ")[1].split(" \\?")[0];
+		String stringGalacticCurrency = instruction.split(" is ")[1]
+				.split(" \\?")[0];
 		return stringGalacticCurrency;
 	}
 
-
-
-	private Expression parseAddition(String expression) {
+	private ExpressionQuestion parseAddition(String expression) {
 		String[] expressionArray = expression.split(" plus ");
-		return new GalacticAddition(parseGalacticCurrency(expressionArray[0]), parseGalacticCurrency(expressionArray[1]));
-		
-	}
+		return new ExpressionQuestion(new GalacticAddition(
+				parseGalacticCurrency(expressionArray[0]),
+				parseGalacticCurrency(expressionArray[1])));
 
+	}
 }

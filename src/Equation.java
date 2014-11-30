@@ -2,6 +2,9 @@ package src;
 
 import java.math.BigDecimal;
 
+import src.expressions.Galactic;
+import src.instructions.Instruction;
+
 public class Equation implements Instruction {
 	Galactic coeficient;
 	int constant;
@@ -33,8 +36,7 @@ public class Equation implements Instruction {
 
 	public BigDecimal solve(ConversionTable conversionTable)
 			throws InvalidConversionKey {
-		return decimalConstant.divide(new BigDecimal(coeficient
-				.value(conversionTable)));
+		return decimalConstant.divide(coeficient.value(conversionTable));
 	}
 
 	public String run(ConversionTable conversionTable) {
