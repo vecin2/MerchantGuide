@@ -2,7 +2,6 @@ package tests;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.PrintStream;
 import java.math.BigDecimal;
 
 import org.junit.Before;
@@ -14,11 +13,8 @@ import src.EquationStringParser;
 import src.Galactic;
 import src.GalacticCurrency;
 import src.GalaxyAgenda;
-import src.GalaxyAgendaApp;
 import src.InvalidConversionKey;
-import src.QuestionParser;
 import src.expressions.Expression;
-import static org.mockito.Mockito.*;
 
 public class TestGalaxyAgenda {
 	ConversionTable conversionTable;
