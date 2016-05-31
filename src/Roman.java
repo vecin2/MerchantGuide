@@ -43,7 +43,7 @@ public class Roman {
 		int result = 0;
 		for (int i = 0; i < numberOfSymbols(); i++) {
 			if (arabicValueAtIndex(i) < arabicValueAtIndex(i + 1))
-				result += -arabicValueAtIndex(i);
+				result -= arabicValueAtIndex(i);
 			else
 				result += arabicValueAtIndex(i);
 		}
@@ -73,8 +73,8 @@ public class Roman {
 		Roman other = (Roman) obj;
 		return stringRoman.equals(other.stringRoman);
 	}
-
-	public String romanValue() {
+	@Override
+	public String toString() {
 		return stringRoman;
 	}
 }

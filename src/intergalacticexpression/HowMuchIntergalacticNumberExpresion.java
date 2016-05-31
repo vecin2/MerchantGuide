@@ -2,30 +2,23 @@ package src.intergalacticexpression;
 
 import src.IntergalacticNumber;
 import src.IntergalacticUnitConverter;
+import src.InvalidIntergalacticUnitException;
 import src.InvalidRomanException;
 
-public class HowMuchIntergalacticNumberExpresion {
+public class HowMuchIntergalacticNumberExpresion extends IntergalacticExpression {
 
-	private String stringExpression;
+	private IntergalacticNumber intergalacticNumber;
 
 	public HowMuchIntergalacticNumberExpresion(String stringExpression) {
-		this.stringExpression = stringExpression;
-
+		// example stringExpression: how much is pish tegj glob glob ?
+		super(stringExpression);
+		intergalacticNumber = new IntergalacticNumber(expresionLine.wordsInBetween("how much is", "\\?"));
 	}
 
-
-	public void solve(IntergalacticUnitConverter converter, StringBuilder sb) throws InvalidRomanException {
-		IntergalacticNumber intergalacticNumber = new IntergalacticNumber(extractIntergalacticNumber(stringExpression));
-		sb.append(intergalacticNumber.getStringNumber() + " is " + intergalacticNumber.value(converter));
-		
+	@Override
+	public void solve(IntergalacticUnitConverter converter, StringBuilder sb)
+			throws InvalidRomanException, InvalidIntergalacticUnitException {
+		sb.append(intergalacticNumber.toString() + " is " + intergalacticNumber.value(converter) + "\n");
 	}
-	private String extractIntergalacticNumber(String note) {
-		return extractStringInBetween(note, "how much is", "\\?");
-	}
-	private String extractStringInBetween(String note, String firstString, String lastString) {
-		return note.split(lastString)[0].split(firstString)[1].trim();
-	}
-	
-	
 
 }

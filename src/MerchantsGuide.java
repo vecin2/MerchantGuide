@@ -1,67 +1,46 @@
 package src;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.Reader;
-import java.util.ArrayList;
-import java.util.HashMap;
 
-import src.intergalacticexpression.HowManyCreditsMetalExpression;
-import src.intergalacticexpression.HowMuchIntergalacticNumberExpresion;
-import src.intergalacticexpression.IntergalacticRomanNumberAssigmentExpression;
-import src.intergalacticexpression.InvalidIntergalacticExpression;
-import src.intergalacticexpression.MetalCreditsAssignmentExpression;
+import src.intergalacticexpression.ExpressionSet;
+import src.utils.InputDataReader;
 
 public class MerchantsGuide {
-
-	private Reader reader;
 	private PrintStream out;
 	private StringBuilder sb = new StringBuilder();
-	public IntergalacticUnitConverter converter = new IntergalacticUnitConverter(new HashMap<String, String>(), new HashMap<String, String>());
+	public IntergalacticUnitConverter converter = new IntergalacticUnitConverter();
+	private InputDataReader inputDataReader;
 
-	public MerchantsGuide(Reader reader, PrintStream out) {
+	public MerchantsGuide(Reader reader, PrintStream out) throws IOException {
 		this.out = out;
-		this.reader = reader;
+		inputDataReader = new InputDataReader(reader);
 	}
 
-	public void run() throws IOException, InvalidRomanException {
-		InputDataReader inputDataReader = new InputDataReader(reader);
-		ArrayList<String> instructions = inputDataReader.getInputData();
-		for (String instruction : instructions) {
-			processInstruction(instruction);
-		}
-		out.println(sb.toString());
+	public void run() throws IOException, InvalidRomanException, InvalidIntergalacticUnitException {
+		out.println("Welcome to Merchant's Guide to Galaxy!!");
+		
+		printInput();
+
+		printOutput();
 
 	}
 
-	private void processInstruction(String instruction) throws InvalidRomanException {
-		if (instruction.contains("how much is")) {
-			HowMuchIntergalacticNumberExpresion howMuchInterglacticNumberExpression = new HowMuchIntergalacticNumberExpresion(
-					instruction);
-			howMuchInterglacticNumberExpression.solve(converter, sb);
-		} else if (instruction.contains("how many Credits is")) {
-			HowManyCreditsMetalExpression howManyCreditMetalExpresstion = new HowManyCreditsMetalExpression(
-					instruction);
-			howManyCreditMetalExpresstion.solve(converter, sb);
-
-		} else if (instruction.contains("Credits")) {
-			MetalCreditsAssignmentExpression metalCreditAssigmentExpression = new MetalCreditsAssignmentExpression(
-					instruction);
-			metalCreditAssigmentExpression.solve(converter);
-
-		} else if (instruction.contains("is")) {
-			IntergalacticRomanNumberAssigmentExpression intergalacticRomanNumberAssigment = new IntergalacticRomanNumberAssigmentExpression(
-					instruction);
-			intergalacticRomanNumberAssigment.solve(converter);
-
-		} else {
-			InvalidIntergalacticExpression invalidIntergalacticExpression = new InvalidIntergalacticExpression(
-					instruction);
-			invalidIntergalacticExpression.solve(sb);
-
-		}
+	private void printInput() throws IOException {
+		out.println("\nReading input data from 'inputData.txt' file within current folder("
+				+ new File("").getAbsolutePath() + "):");
+		out.print(inputDataReader.getAllContent());
 	}
 
+	private void printOutput()
+			throws IOException, InvalidRomanException, InvalidIntergalacticUnitException {
+		out.println("\nOutput:");
+		ExpressionSet expressionSet = new ExpressionSet(inputDataReader.getAllContent());
+		expressionSet.solve(converter, sb);
+		out.print(sb.toString());
+	}
 
 
 }

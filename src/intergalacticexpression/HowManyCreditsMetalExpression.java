@@ -1,37 +1,40 @@
 package src.intergalacticexpression;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 
 import src.IntergalacticNumber;
 import src.IntergalacticUnitConverter;
+import src.InvalidIntergalacticUnitException;
 import src.InvalidRomanException;
+import src.MetalCredits;
+import src.utils.Line;
 
-public class HowManyCreditsMetalExpression {
+public class HowManyCreditsMetalExpression extends IntergalacticExpression {
 
-	private String stringExpression;
+	private MetalCredits metal;
+	private IntergalacticNumber intergalacticNumber;
 
 	public HowManyCreditsMetalExpression(String stringExpression) {
-		this.stringExpression = stringExpression;
+		// stringExpresion example: how many Credits is glob prok Silver ?
+		super(stringExpression);
+		metal = new MetalCredits(extractMetalName());
+		intergalacticNumber = new IntergalacticNumber(expresionLine.wordsInBetween("how many Credits is", "\\w+ \\?"));
 	}
 
-	public void solve(IntergalacticUnitConverter converter, StringBuilder sb) throws InvalidRomanException {
-		Metal metal = new Metal(extractMetalCurrency(stringExpression));
-		IntergalacticNumber intergalacticNumber = new IntergalacticNumber(extractStringInBetween(stringExpression, "how many Credits is", "\\w+ \\?"));
-		
-		sb.append(metal.getName() + " is " + new BigDecimal(converter.conversionMetalsCredits.get("Silver"))
-				.multiply(new BigDecimal(intergalacticNumber.value(converter))) + " Credits");
+	public void solve(IntergalacticUnitConverter converter, StringBuilder sb)
+			throws InvalidRomanException, InvalidIntergalacticUnitException {
+		DecimalFormat format = new DecimalFormat("#.##");
+		sb.append(extractMetalExpression() + " is "
+				+ format.format(metal.value(converter).multiply(new BigDecimal(intergalacticNumber.value(converter)))) + " Credits\n");
 	}
 
-	public String extractMetalCurrency(String note) {
-		return extractStringInBetween(note, "how many Credits is", "\\?");
+	private String extractMetalName() {
+		return new Line(extractMetalExpression()).lastWord();
 	}
 
-	public String extractStringInBetween(String note, String firstString, String lastString) {
-		return note.split(lastString)[0].split(firstString)[1].trim();
+	public String extractMetalExpression() {
+		return expresionLine.wordsInBetween("how many Credits is", "\\?");
 	}
-
-
-
-
 
 }

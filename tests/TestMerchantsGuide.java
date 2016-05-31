@@ -2,60 +2,100 @@ package tests;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.PrintStream;
-import java.io.StringReader;
 
+import org.junit.Before;
 import org.junit.Test;
 
+import src.IntergalacticUnitConverter;
+import src.InvalidIntergalacticUnitException;
 import src.InvalidRomanException;
-import src.MerchantsGuide;
+import src.intergalacticexpression.ExpressionSet;
 
 public class TestMerchantsGuide {
+	private StringBuilder sb;
+	private ExpressionSet merchantsGuideExpressions;
+	private IntergalacticUnitConverter converter;
 
-	@Test
-	public void testHowMuchIsGlob() throws IOException, InvalidRomanException {
-		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-		PrintStream printStream = new PrintStream(outputStream);
-		StringReader stringReader = new StringReader("glob is I\n" + "how much is glob ?");
-		MerchantsGuide merchantsGuide = new MerchantsGuide(stringReader, printStream);
-		merchantsGuide.run();
-		assertEquals("glob is 1\n", outputStream.toString());
+	@Before
+	public void setup() {
+		sb = new StringBuilder();
+		converter = new IntergalacticUnitConverter();
 	}
 
 	@Test
-	public void testHowMuchIsPishTegjGlobGlob() throws IOException, InvalidRomanException {
-		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-		PrintStream printStream = new PrintStream(outputStream);
-		StringReader stringReader = new StringReader(
-				"glob is I\n" + "prok is V\n" + "pish is X\n" + "tegj is L\n" + "how much is pish tegj glob glob ?");
-		MerchantsGuide merchantsGuide = new MerchantsGuide(stringReader, printStream);
-		merchantsGuide.run();
-		assertEquals("pish tegj glob glob is 42\n", outputStream.toString());
+	public void testHowMuchIsGlob() throws IOException, InvalidRomanException, InvalidIntergalacticUnitException   {
+		assertOuput("glob is 1\n","glob is I\n" + "how much is glob ?\n");
 	}
 
 	@Test
-	public void testHowManyCreditsIsGlobProkSilver() throws IOException, InvalidRomanException {
-		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-		PrintStream printStream = new PrintStream(outputStream);
-		StringReader stringReader = new StringReader("glob is I\n" + "prok is V\n" + "glob glob Silver is 34 Credits\n"
-				+ "how many Credits is glob prok Silver ?");
-		MerchantsGuide merchantsGuide = new MerchantsGuide(stringReader, printStream);
-		merchantsGuide.run();
-		assertEquals("glob prok Silver is 68 Credits\n", outputStream.toString());
+	public void testHowMuchIsPishTegjGlobGlob() throws IOException, InvalidRomanException, InvalidIntergalacticUnitException  {
+		assertOuput("pish tegj glob glob is 42\n", "glob is I\n" + 
+												   "prok is V\n" + 
+												   "pish is X\n" + "tegj is L\n" + 
+												   "how much is pish tegj glob glob ?\n");
 	}
 
+	@Test
+	public void testHowManyCreditsIsGlobProkSilver() throws IOException, InvalidRomanException, InvalidIntergalacticUnitException  {
+		assertOuput("glob prok Silver is 68 Credits\n", "glob is I\n" +
+	                                                    "prok is V\n" + 
+	                                                    "glob glob Silver is 34 Credits\n" + 
+	                                                    "how many Credits is glob prok Silver ?");
+	}
+
+	@Test
+	public void testHowManyCreditsIsGlobProkGold() throws IOException, InvalidRomanException, InvalidIntergalacticUnitException  {
+		assertOuput("glob prok Gold is 57800 Credits\n", "glob is I\n" +
+													      "prok is V\n" + 
+													      "glob prok Gold is 57800 Credits\n" +
+													 	"how many Credits is glob prok Gold ?");
+	}
+
+	@Test
+	public void testHowManyCreditsIsGlobProkIron() throws IOException, InvalidRomanException, InvalidIntergalacticUnitException {
+		assertOuput("glob prok Iron is 782 Credits\n", "glob is I\n" +
+													   "prok is V\n" +
+													   "pish is X\n" +
+													   "pish pish Iron is 3910 Credits\n" +
+													 	"how many Credits is glob prok Iron ?");
+	}
+	
 	@Test
 	public void testHowMuchWoodCouldAWoodchuckChuckIfAWoodChuckCouldChuckWood()
-			throws IOException, InvalidRomanException {
-		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-		PrintStream printStream = new PrintStream(outputStream);
-		StringReader stringReader = new StringReader(
-				"how much wood could a woodchuck chuck if a woodchuck could chuck wood ?");
-		MerchantsGuide merchantsGuide = new MerchantsGuide(stringReader, printStream);
-		merchantsGuide.run();
-		assertEquals("I have no idea what you are talking about\n", outputStream.toString());
+			throws IOException, InvalidRomanException, InvalidIntergalacticUnitException
+			 {
+		assertOuput("I have no idea what you are talking about\n",
+				    "how much wood could a woodchuck chuck if a woodchuck could chuck wood ?");
 	}
+	@Test
+	public void testAllInputData()
+			throws IOException, InvalidRomanException, InvalidIntergalacticUnitException
+			 {
+		String expressionLines ="glob is I\n" +
+							   "prok is V\n" +
+							   "pish is X\n" +
+							   "tegj is L\n"+
+							   "glob glob Silver is 34 Credits\n"+
+							   "glob prok Gold is 57800 Credits\n"+
+							   "pish pish Iron is 3910 Credits\n" +
+							   "how much is pish tegj glob glob ?\n"+
+							   "how many Credits is glob prok Silver ?\n"+
+							   "how many Credits is glob prok Gold ?\n"+
+							   "how many Credits is glob prok Iron ?\n"+
+							   "how much wood could a woodchuck chuck if a woodchuck could chuck wood ?\n";
+		String expected ="pish tegj glob glob is 42\n"+
+				"glob prok Silver is 68 Credits\n"+
+				"glob prok Gold is 57800 Credits\n"+
+				"glob prok Iron is 782 Credits\n"+
+				"I have no idea what you are talking about\n";	
+		assertOuput(expected, expressionLines);
+	}
+	private void assertOuput(String expected, String expressionLines) throws InvalidRomanException, InvalidIntergalacticUnitException {
+		merchantsGuideExpressions = new ExpressionSet(expressionLines);
+		merchantsGuideExpressions.solve(converter, sb);
+		assertEquals(expected, sb.toString());
+	}
+
 
 }

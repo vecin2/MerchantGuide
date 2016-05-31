@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 import org.junit.Test;
 
-import src.InputDataReader;
+import src.utils.InputDataReader;
 
 public class TestFileProcessing {
 
@@ -21,7 +21,7 @@ public class TestFileProcessing {
 		ArrayList<String> expectedInputData = new ArrayList<>();
 		expectedInputData.add("glob is I");
 		expectedInputData.add("prox is V");
-		assertEquals(expectedInputData, inputDataReader.getInputData());
+		assertEquals(expectedInputData, inputDataReader.getLines());
 	}
 
 }
