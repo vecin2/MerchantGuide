@@ -12,29 +12,25 @@ import src.utils.Line;
 
 public class HowManyCreditsMetalExpression extends IntergalacticExpression {
 
-	private MetalCredits metal;
+	private MetalCredits metalCredits;
 	private IntergalacticNumber intergalacticNumber;
 
 	public HowManyCreditsMetalExpression(String stringExpression) {
 		// stringExpresion example: how many Credits is glob prok Silver ?
 		super(stringExpression);
-		metal = new MetalCredits(extractMetalName());
-		intergalacticNumber = new IntergalacticNumber(expresionLine.wordsInBetween("how many Credits is", "\\w+ \\?"));
+		metalCredits = new MetalCredits(extractMetalCreditsExpression().lastWord());
+		intergalacticNumber = new IntergalacticNumber(extractMetalCreditsExpression().removeLastWord().toString());
+	}
+	
+	public Line extractMetalCreditsExpression() {
+		return expresionLine.wordsInBetween("how many Credits is", "\\?");
 	}
 
 	public void solve(IntergalacticUnitConverter converter, StringBuilder sb)
 			throws InvalidRomanException, InvalidIntergalacticUnitException {
 		DecimalFormat format = new DecimalFormat("#.##");
-		sb.append(extractMetalExpression() + " is "
-				+ format.format(metal.value(converter).multiply(new BigDecimal(intergalacticNumber.value(converter)))) + " Credits\n");
-	}
-
-	private String extractMetalName() {
-		return new Line(extractMetalExpression()).lastWord();
-	}
-
-	public String extractMetalExpression() {
-		return expresionLine.wordsInBetween("how many Credits is", "\\?");
+		sb.append(extractMetalCreditsExpression() + " is "
+				+ format.format(metalCredits.value(converter).multiply(new BigDecimal(intergalacticNumber.value(converter)))) + " Credits\n");
 	}
 
 }

@@ -4,21 +4,22 @@ import java.math.BigDecimal;
 
 public class MetalCredits {
 
-	private String name;
+	private String metalName;
 
-	public MetalCredits(String name) {
-		this.name = name;
+	public MetalCredits(String metalName) {
+		this.metalName = metalName;
 	}
 
 	public BigDecimal value(IntergalacticUnitConverter converter) throws InvalidIntergalacticUnitException {
 		return new BigDecimal(converter.convert(this));
+		
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((metalName == null) ? 0 : metalName.hashCode());
 		return result;
 	}
 
@@ -31,16 +32,16 @@ public class MetalCredits {
 		if (getClass() != obj.getClass())
 			return false;
 		MetalCredits other = (MetalCredits) obj;
-		if (name == null) {
-			if (other.name != null)
+		if (metalName == null) {
+			if (other.metalName != null)
 				return false;
-		} else if (!name.equals(other.name))
+		} else if (!metalName.equals(other.metalName))
 			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return name;
+		return metalName;
 	}
 }

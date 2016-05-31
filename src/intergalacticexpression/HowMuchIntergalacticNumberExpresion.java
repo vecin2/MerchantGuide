@@ -12,7 +12,7 @@ public class HowMuchIntergalacticNumberExpresion extends IntergalacticExpression
 	public HowMuchIntergalacticNumberExpresion(String stringExpression) {
 		// example stringExpression: how much is pish tegj glob glob ?
 		super(stringExpression);
-		intergalacticNumber = new IntergalacticNumber(expresionLine.wordsInBetween("how much is", "\\?"));
+		intergalacticNumber = new IntergalacticNumber(expresionLine.wordsInBetween("how much is", "\\?").toString());
 	}
 
 	@Override
